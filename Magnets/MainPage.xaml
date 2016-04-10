@@ -1,0 +1,54 @@
+﻿<Page
+    x:Class="Magnets.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Magnets"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <local:BoolInverterConverter x:Name="Inverter"/>
+        <DataTemplate x:Name="MagnetTemplate">
+            <TextBlock>
+                <Run Text="{Binding Name}"/>
+            </TextBlock>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Pivot>
+            <PivotItem Header="New">
+                <ListView ItemsSource="{Binding NewItemsResults}" ItemClick="ListView_ItemClick" IsItemClickEnabled="True" ItemTemplate="{StaticResource MagnetTemplate}"/>
+            </PivotItem>
+            <PivotItem Header="Search">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView ItemsSource="{Binding SearchResults}" ItemClick="ListView_ItemClick" IsItemClickEnabled="True" ItemTemplate="{StaticResource MagnetTemplate}"/>
+                    <TextBox Grid.Row="1" x:Name="SearchQueryBox" Text="{Binding SearchQuery,Mode=TwoWay}"/>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Autoload" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView ItemsSource="{Binding AutoloadItems}" ItemClick="AutoLoad_ItemClick" IsItemClickEnabled="True" ItemTemplate="{StaticResource MagnetTemplate}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Button>Add</Button>
+                        <TextBox x:Name="AutoLoadBox" Text="{Binding AutoLoadText,Mode=TwoWay}"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Settings">
+                <StackPanel>
+                    <CheckBox Content="Open on this device" x:Name="OpenHere" IsChecked="{Binding OpenHere,Mode=TwoWay}"/>
+                    <TextBox Header="URL" ToolTipService.ToolTip="http://www.example.com/Add.php" IsEnabled="{Binding ElementName=OpenHere,Path=IsChecked,Converter={StaticResource Inverter}}" Text="{Binding OpenWebpageUri,Mode=TwoWay}"/>
+                    <TextBlock>Sending as POST to URL above. Example: http://www.example.com/Add.php</TextBlock>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
